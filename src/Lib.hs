@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Lib
-    ( otherFunc
+    ( otherFunc,
+      showFilms
     ) where
 
 import Text.HTML.Scalpel
@@ -37,7 +38,7 @@ showFilms = do
   maybe printError printFilms programmes
   where
     printError = putStrLn "Error: could not scrape URL."
-    printFilms = mapM_ putStrLn
+    printFilms = mapM_ print
 
 allTitles :: IO (Maybe [Title])
 allTitles = scrapeURL "https://www.bbc.co.uk/iplayer/categories/films/a-z?sort=atoz&page=1" titles
