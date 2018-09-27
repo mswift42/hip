@@ -4,6 +4,7 @@ module Lib
     ) where
 
 import Text.HTML.Scalpel
+import Text.Show.Functions
 
 type Title = String
 type SubTitle = String
@@ -16,7 +17,7 @@ data Programme =  Programme { title :: Title
                             , url :: String
                             , index :: Int
                             , available :: String
-                            , duration :: String } deriving (Show)
+                            , duration :: String } deriving (Show, Eq)
 
 
 someFunc :: IO ()
@@ -29,6 +30,14 @@ otherFunc = do
   where
     printError = putStrLn "ERROR: could not scrape URL."
     printTitles = mapM_ putStrLn
+
+showFilms :: IO ()
+showFilms = do
+  programmes <- films
+  maybe printError printFilms programmes
+  where
+    printError = putStrLn "Error: could not scrape URL."
+    printFilms = mapM_ putStrLn
 
 allTitles :: IO (Maybe [Title])
 allTitles = scrapeURL "https://www.bbc.co.uk/iplayer/categories/films/a-z?sort=atoz&page=1" titles
@@ -45,17 +54,17 @@ allTitles = scrapeURL "https://www.bbc.co.uk/iplayer/categories/films/a-z?sort=a
 films :: IO (Maybe [Programme])
 films = scrapeURL "https://www.bbc.co.uk/iplayer/categories/films/a-z?sort=atoz&page=1" programmes
   where
-    programmes :: Scraper String [Title]
+    programmes :: Scraper String [Programme]
     programmes = chroots ("div" @: [hasClass "content-item"]) programme
 
     programme :: Scraper String Programme
     programme = do
       title <- text $ "div" @: [hasClass "content-item__title"]
       subtitle <- text $ "div" @: [hasClass "content-item__description"]
-      synopsis <- "synopsis"
+      synopsis <- text $ "div" @: [hasClass "content-item__description" ]
       thumbnail <- attr "srcset" $ "source" 
       url <- attr "href" $ "a"
-      index <- 0
+      -- index <- 0
       available <- text $ "div" @: [hasClass "content-item__sublabels"] 
-      duration <- "a month"
-      return $ Programme title subtitle synopsis thumbnail url index available duration
+      duration <- text $ "div" @: [hasClass "content-item__labels"] 
+      return $ Programme title subtitle synopsis thumbnail url 0 available duration
