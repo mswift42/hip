@@ -14,6 +14,10 @@ type Synopsis = String
 type BeebURL = String
 type TestHTMLUrl = String
 
+data IplayerURL = BeebURL | TestHTMLUrl
+
+
+
 data Programme =  Programme { title :: Title
                             , subtitle :: SubTitle
                             , synopsis :: Synopsis
