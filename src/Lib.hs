@@ -55,9 +55,7 @@ allTitles = scrapeURL "https://www.bbc.co.uk/iplayer/categories/films/a-z?sort=a
     titles = chroots ("div" @: [hasClass "content-item"]) title
 
     title :: Scraper String Title
-    title  = do
-      progtitle <- text $ "div" @: [hasClass "content-item__title"]
-      return progtitle
+    title =  text $ "div" @: [hasClass "content-item__title"]
 
 
 films :: IO (Maybe [Programme])
