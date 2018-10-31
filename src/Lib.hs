@@ -52,10 +52,8 @@ allTitles :: IO (Maybe [Title])
 allTitles = scrapeURL "https://www.bbc.co.uk/iplayer/categories/films/a-z?sort=atoz&page=1" titles
   where
     titles :: Scraper String [Title]
-    titles = chroots ("div" @: [hasClass "content-item"]) title
+    titles = chroots ("div" @: [hasClass "content-item"]) programmeTitle
 
-    title :: Scraper String Title
-    title =  text $ "div" @: [hasClass "content-item__title"]
 
 
 films :: IO (Maybe [Programme])
@@ -66,7 +64,7 @@ films = scrapeURL "https://www.bbc.co.uk/iplayer/categories/films/a-z?sort=atoz&
 
     programme :: Scraper String Programme
     programme = do
-      title <- text $ "div" @: [hasClass "content-item__title"]
+      title <- programmeTitle
       subtitle <- text $ "div" @: [hasClass "content-item__primary"] // "div" @: [hasClass "content-item__description"]
       synopsis <- text $ "div" @: [hasClass "content-item__info__secondary" ] // "div" @: [hasClass "content-item__description"]
       thumbnail <- attr "srcset" "source"
@@ -74,4 +72,7 @@ films = scrapeURL "https://www.bbc.co.uk/iplayer/categories/films/a-z?sort=atoz&
       available <- texts $  "div" @: [hasClass "content-item__sublabels"] // "span"
       duration <-  texts $  "div" @: [hasClass "content-item__sublabels"] // "span"
       return $ Programme title subtitle synopsis thumbnail url 0 (available !! 1) (head duration)
+
+programmeTitle :: Scraper String Title
+programmeTitle = text $ "div" @: [hasClass "content-item__title"]
 
