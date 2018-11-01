@@ -79,5 +79,5 @@ programmeTitle = text $ "div" @: [hasClass "content-item__title"]
 programmeSubTitle :: Scraper String SubTitle
 programmeSubTitle = text $ "div" @: [hasClass "content-item__primary"] // "div" @: [hasClass "content-item__description"]
 
-sublabels :: Selector
-sublabels = "div" @: [hasClass "content-item__sublabels"] // "span"
+sublabeltexts :: Scraper String [String]
+sublabeltexts = texts $ "div" @: [hasClass "content-item__sublabels"] // "span"
