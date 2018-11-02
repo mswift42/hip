@@ -69,9 +69,8 @@ films = scrapeURL "https://www.bbc.co.uk/iplayer/categories/films/a-z?sort=atoz&
       synopsis <- text $ "div" @: [hasClass "content-item__info__secondary" ] // "div" @: [hasClass "content-item__description"]
       thumbnail <- attr "srcset" "source"
       url <- attr "href" "a"
-      available <- texts $  "div" @: [hasClass "content-item__sublabels"] // "span"
-      duration <-  texts $  "div" @: [hasClass "content-item__sublabels"] // "span"
-      return $ Programme title subtitle synopsis thumbnail url 0 (available !! 1) (head duration)
+      sublabel <- sublabeltexts
+      return $ Programme title subtitle synopsis thumbnail url 0 (sublabel !! 1) (head sublabel)
 
 programmeTitle :: Scraper String Title
 programmeTitle = text $ "div" @: [hasClass "content-item__title"]
